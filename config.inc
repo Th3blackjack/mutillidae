@@ -6,8 +6,8 @@
 	 * BUT WAS REPLACED BY THE MySQLHandler CLASS.
 	 */
 
-	//$dbhost = 'localhost';
-	//$dbuser = 'root';
+	$dbhost = 'localhost';
+	$dbuser = 'root';
 	$dbpass = 'mysqlroot';
-	//$dbname = 'owasp10';
+	$dbname = 'nowasp';
 ?>
