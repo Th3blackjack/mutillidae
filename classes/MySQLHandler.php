@@ -36,7 +36,7 @@ class MySQLHandler {
 	 * On Samurai, the $dbpass password is "samurai" rather 
 	 * than blank.
 	 * */
-	static public $mMySQLDatabasePassword = "";
+	static public $mMySQLDatabasePassword = "mysqlroot";
 	
 	/* ----------------------------------------------
 	 * DATABASE NAME (NOT SERVER NAME)

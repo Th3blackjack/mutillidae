@@ -26,7 +26,7 @@
 			break;
     	}// end switch
 
-    	// $lWebServerUploadDirectory = __ROOT__.DIRECTORY_SEPARATOR.'uploads';
+			// $lWebServerUploadDirectory = __ROOT__.DIRECTORY_SEPARATOR.'uploads';
     	$lWebServerUploadDirectory = sys_get_temp_dir();
     	$lFormSubmitted = $lFileMovedSuccessfully = FALSE;
 		if (isset($_POST["upload-file-php-submit-button"]) || isset($_REQUEST["upload-file-php-submit-button"])) {
