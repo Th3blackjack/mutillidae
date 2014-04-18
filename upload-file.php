@@ -1,7 +1,7 @@
 <?php include_once (__ROOT__.'/classes/FileUploadExceptionHandler.php');?>
 <?php include_once (__ROOT__.'/includes/back-button.inc');?>
 <?php include_once (__ROOT__.'/includes/hints-level-1/level-1-hints-wrapper.inc'); ?>
-<?php	
+<?php
 	try{
     	switch ($_SESSION["security-level"]){
     		case "0": // This code is insecure. No input validation is performed.
@@ -25,8 +25,8 @@
 				$lUploadDirectoryFlag = "TEMP_DIRECTORY";
 			break;
     	}// end switch
-    	
-		//$lWebServerUploadDirectory = __ROOT__.DIRECTORY_SEPARATOR.'uploads';
+
+    	// $lWebServerUploadDirectory = __ROOT__.DIRECTORY_SEPARATOR.'uploads';
     	$lWebServerUploadDirectory = sys_get_temp_dir();
     	$lFormSubmitted = $lFileMovedSuccessfully = FALSE;
 		if (isset($_POST["upload-file-php-submit-button"]) || isset($_REQUEST["upload-file-php-submit-button"])) {
@@ -34,20 +34,21 @@
 		}// end if
 
 		if ($lFormSubmitted){
-			
+
 	    	switch ($lUploadDirectoryFlag){
 	    		case "CLIENT_DECIDES": $lTempDirectory = $_REQUEST["UPLOAD_DIRECTORY"];break;
 				case "WEB_SERVER": $lTempDirectory = $lWebServerUploadDirectory;break;
 				case "TEMP_DIRECTORY": $lTempDirectory = sys_get_temp_dir();break;
 	    	}// end switch
-			
+
 			/* Common file properties */
+			$lPermanentDirectory = __ROOT__.DIRECTORY_SEPARATOR.'uploads';
 			$lFilename = $_FILES["filename"]["name"];
 			$lFileTempName = $_FILES["filename"]["tmp_name"];
 			$lFileType = $_FILES["filename"]["type"];
 			$lFileSize = $_FILES["filename"]["size"];
 			$lFileUploadErrorCode = $_FILES["filename"]["error"];
-			$lFilePermanentName = $lTempDirectory . DIRECTORY_SEPARATOR . $lFilename;
+			$lFilePermanentName = $lPermanentDirectory . DIRECTORY_SEPARATOR . $lFilename;
 
 			/* File properties needed for validation */
 			$lAllowedFileExtensions = array("gif", "jpeg", "jpg", "png");
@@ -56,7 +57,7 @@
 			$lFileExtension = end($lFilenameParts);
 			$lValidationMessage = "Validation not performed";
 			$lFileMovedMessage = "Moving file was not attempted";
-			
+
 			/* File property strings suitible for printing */
 			if ($lFileSize > 1000){
 				$lFileSizeString = number_format($lFileSize/1000). " KB";
@@ -75,11 +76,11 @@
 				$lFileUploadMessage = "Error detected during file upload (Code {$lFileUploadErrorCode}). See error output for detail.";
 				throw new FileUploadExceptionHandler($lFileUploadErrorCode);
 			}//end if UPLOAD_ERR_OK
-			
+
 			$lFileValid = TRUE;
 			if ($lValidateFileUpload){
 				$lValidationMessage = "Validation performed.";
-				
+
 				if (!in_array($lFileExtension, $lAllowedFileExtensions)) {
 					$lValidationMessage .= " File extension {$lFileExtension} not allowed.";
 					$lFileValid = FALSE;
@@ -89,13 +90,13 @@
 					$lValidationMessage .= " File type {$lFileType} not allowed.";
 					$lFileValid = FALSE;
 				}// end if
-	
+
 				if ($lFileSize > $lAllowedFileSize){
 					$lValidationMessage .= "File size {$lFileSizeString} exceeds allowed file size {$lAllowedFileSizeString}.";
 					$lFileValid = FALSE;
 				}// end if
 			}// end if $lValidateFileUpload
-			
+
 			if ($lFileValid){
 				if (move_uploaded_file($lFileTempName, $lFilePermanentName)) {
 					$lFileMovedSuccessfully = TRUE;
@@ -106,15 +107,15 @@
 					throw new Exception($lMessage);
 				}//end if move_uploaded_file
 			}// end if $lFileValid
-				
+
 		}//end if $lFormSubmitted
 	}catch(Exception $e){
 		echo $CustomErrorHandler->FormatError($e, "Error uploading file");
-	}// end try	
+	}// end try
 ?>
 
 <!-- Bubble hints code -->
-<?php 
+<?php
 	try{
    		$lHTMLandXSSandSQLInjectionPointBalloonTip = $BubbleHintHandler->getHint("HTMLandXSSandSQLInjectionPoint");
 	} catch (Exception $e) {
@@ -132,7 +133,7 @@
 <div class="page-title">Upload a File</div>
 <div>&nbsp;</div>
 
-<?php 
+<?php
 	if ($lFormSubmitted) {
 		echo "<div>
 				<table style='width: 600px;'>
@@ -145,7 +146,7 @@
 					<tr><td class='label'>Permanent File Name</td><td>{$lFilePermanentName}</td></tr>
 					<tr><td class='label'>File Type</td><td>{$lFileType}</td></tr>
 					<tr><td class='label'>File Size</td><td>{$lFileSizeString}</td></tr>
-				</table>	
+				</table>
 			</div>
 			<div>&nbsp;</div>";
 	}//end if
